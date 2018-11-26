@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	
+		<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="a39aca36-6fa5-4660-ac65-3fe64f20d85b" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="mainFlow" doc:id="8addaaf5-ad6d-48d0-bf9d-259f4cfc917b" >
+		<http:listener doc:name="GET /jenkins"  config-ref="HTTP_Listener_config" path="/jenkins"/>
+		<set-variable value="adas" doc:name="Set Variable" doc:id="b0cd792f-e796-4be7-a9bb-205391a40c3b" variableName="id"/>
+		<choice doc:name="Choice" doc:id="1a9383be-ec2c-4dc8-983c-88262b0b699b" >
+			<when expression="#[attributes.queryParams.name == 'sid']" >
+				<http:request method="GET" doc:name="Request - http://something.com" doc:id="8b4c9e05-d29b-491e-bd12-386334cf6bd0" url="https://jsonplaceholder.typicode.com/users/1" />
+			</when>
+			<when expression="#[attributes.queryParams.name == 'sid2']" >
+				<set-payload value='{"messageHeader":{"responseCode":0,"consumerId":"","targetId":"","transactionCode":"EXEQ","consumerType":"","salesDistrict":0,"userId":"","userInfoDetail":"","correlationId":"","transactionId":"","maxWaitTime":0,"maxRetryCount":0,"abortOnErrorFlag":"C","replyErrorNumber":"0000","replyErrorText":"TRANSACTION COMPLETED SUCCESSFULLY","replyErrorType":"","replyErrorSeverity":"","processCenter":"","divisionNumber":2099,"divisionName":"","customerNumber":0,"customerName":"","warehouseNumber":2099,"warehouseName":"CHICAGO/3Y","appDefinedText":""},"messageDetail":{"searchType":"P","productNumber":2328987,"licensePlate":0,"slotId":{"areaId":"","aisle":0,"bay":0,"levelNumber":0,"zone":""},"productDetails":{"productDescription":"PEA, GRN SWT 4 SIEV FCY CND","productLabel":"MON-D","salesPackSize":"6/#10 CN","manufacturerProductNumber":"170644","vendorProductNumber":"170644","upcCode":"50758108013037","productAbcClass":"C","divisionShelfLife":0,"nationalShelfLife":730,"storageCode":10,"lowTemperature":33,"highTemperature":90,"letDownPoint":1,"catchWeightFlag":"N","hazardousFlag":"N","alertFlag":"Y","repackFlag":"N","rreFlag":"N","codeDated":"Y","lastReceivedCodeDate":20181202,"containerId":"L484006"},"productMeasurements":{"vendorTi":6,"vendorHi":5,"vendorLength":18.6,"vendorWidth":12.5,"vendorHeight":7,"vendorCube":0.94,"vendorPackSize":"6/#10 CN","vendorGrossWeight":45.3,"vendorNetWeight":39.38,"vendorUom":"CS","warehouseTi":7,"warehouseHi":4,"warehouseLength":18.6,"warehouseWidth":12.5,"warehouseHeight":7,"warehouseCube":0.94,"warehousePackSize":"6/#10 CN","warehouseGrossWeight":45.3,"warehouseNetWeight":39.38,"warehouseUom":"CS"},"productInventory":{"onHandUnits":140,"onHandEaches":0,"reservedUnits":1,"reservedEaches":0,"availableUnits":139,"availableEaches":0,"suspenseUnits":0,"suspenseEaches":0},"pickSlot":{"areaId":"D","aisle":11,"bay":26,"levelNumber":1,"zone":""},"pickSlotPoDetail":{"poNumber":542843,"poDate":20180515,"receivedDate":20180515,"casesReceived":56,"buyerNumber":538,"buyerName":"A X KIM","vendorNumber":50465,"vendorName":"SENECA FOODS CORPORATION","vendorProductNumber":"170644"},"nextPoDetail":{"poNumber":903513,"poDate":20180619,"expectedArrivalDate":20180619,"casesOrdered":28,"buyerNumber":475,"buyerName":"M X CRUZ","vendorNumber":50465,"vendorName":"SENECA FOODS CORPORATION"}}}' doc:name="Set Payload" doc:id="6aa6eefa-c9cd-48a0-a70d-c2b855c8d77c" encoding="UTF-8" mimeType="application/json" />
+			</when>
+			<otherwise >
+				<set-payload value="default1" doc:name="Set Payload" doc:id="27b119aa-46c9-4a14-9077-afa166b36bdb" />
+			</otherwise>
+		</choice>
+		<choice doc:name="Choice" doc:id="b2d241bf-11d7-4bac-8b87-dcc790de46a5" >
+			<when expression='#[(payload.id == 1) and (payload.name == "Leanne Graham")]' >
+				<set-payload value="#[payload.id]" doc:name="Payload = Main Sucess" mimeType="text/plain" />
+			</when>
+			<when expression="#[(payload.messageHeader.responseCode == 0) and (payload.messageDetail.productNumber != null)]" >
+				<set-payload value='Siddharth' doc:name="Satish" doc:id="6d837174-c64a-4bff-a283-493269cf7cf0"/>
+			</when>
+			<otherwise >
+				<set-payload value="default2" doc:name="Set Payload" doc:id="7a37fc99-8563-42be-b812-38258f3d32ce" />
+			</otherwise>
+		</choice>
+		
+	</flow>
+	<flow name="teat2Flow" doc:id="227c9743-2740-4576-a231-ca9fd961b0ae" >
+		<http:listener doc:name="Listener" doc:id="e4e1f583-0577-4ce7-a926-c6d208018ac3" config-ref="HTTP_Listener_config" path="/testss"/>
+		<logger level="INFO" doc:name="Logger" doc:id="ecb893e7-58b0-4f75-a81c-bbbaec01f598" message="#[not isEmpty(payload.messageDetail.slotId.areaId)]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="897f184a-627d-485c-9fb1-92dd9653ca11" message="#[(payload.messageHeader.responseCode) ++ (payload.messageDetail.productNumber)]" />
+	</flow>
+	
+	
+	
+</mule>
